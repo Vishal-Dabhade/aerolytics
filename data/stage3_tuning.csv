@@ -1,0 +1,15 @@
+model,params,cv_RMSE
+Random Forest,"max_depth=8,min_leaf=5",16.313
+Random Forest,"max_depth=8,min_leaf=15",16.31
+Random Forest,"max_depth=12,min_leaf=5",16.403
+Random Forest,"max_depth=12,min_leaf=15",16.401
+Random Forest,"max_depth=None,min_leaf=5",16.427
+Random Forest,"max_depth=None,min_leaf=15",16.386
+XGBoost,"depth=3,lr=0.03,n=300",16.391
+XGBoost,"depth=3,lr=0.03,n=600",16.39
+XGBoost,"depth=3,lr=0.08,n=300",16.438
+XGBoost,"depth=3,lr=0.08,n=600",16.498
+XGBoost,"depth=5,lr=0.03,n=300",16.432
+XGBoost,"depth=5,lr=0.03,n=600",16.501
+XGBoost,"depth=5,lr=0.08,n=300",16.694
+XGBoost,"depth=5,lr=0.08,n=600",16.839

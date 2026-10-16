@@ -1,0 +1,8 @@
+experiment,Linear Regression,Random Forest,XGBoost
+baseline cap125 W5 nocycle,20.631,18.692,19.905
+cap=110,22.395,20.483,21.009
+cap=130,20.45,18.814,19.936
+cap=150,20.657,19.407,20.548
+window=10,20.685,19.616,20.363
+window=15,20.607,20.175,20.714
+with cycle,19.342,16.783,17.511

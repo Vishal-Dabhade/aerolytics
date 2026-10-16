@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23090d16'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c5f03a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/site.css">
+<title>Model lab - AEROLYTICS</title>
+<meta name="description" content="How the Linear Regression, Random Forest and XGBoost models were prepared, validated and tuned before the test set was opened.">
+</head>
+<body>
+<main>
+  <header class="page-head grid-bg"><div class="wrap">
+    <h1 class="display">Model lab</h1>
+    <p class="lede" style="margin-top:18px">How the three models were prepared, compared and tuned, using only the training engines, before the test set was opened.</p>
+  </div></header>
+
+  <section class="section tight" aria-labelledby="vt">
+    <div class="wrap">
+      <h2 class="h2" id="vt">Validation and test are different exams</h2>
+      <p class="lede" style="margin:14px 0 32px">Validation scores guided every choice and come from training engines held out during cross-validation. The test score comes from 100 engines the models never saw, and was run once at the end.</p>
+      <div class="two" id="vtPanels"><div class="skeleton" style="height:240px"></div><div class="skeleton" style="height:240px"></div></div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="wf">
+    <div class="wrap">
+      <h2 class="h2" id="wf">The workflow</h2>
+      <ol class="steps" style="margin-top:36px;max-width:900px" id="steps"></ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="mp">
+    <div class="wrap">
+      <h2 class="h2" id="mp">The three models</h2>
+      <div class="three" style="margin-top:36px" id="profiles"></div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="ex">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:36px"><div class="a"><h2 class="h2" id="ex">What changed the validation error</h2></div>
+      <div class="b"><p class="lede">Each experiment changes one thing from the starting point. Lower is better. Adding the cycle number made the largest difference. The window sizes tested did not help, and a cap near 125 worked best.</p></div></div>
+      <div class="panel panel-pad"><div class="panel-h"><h3>Cross-validated RMSE by experiment</h3><span class="muted small">5-fold, split by engine</span></div><div id="exKey"></div><div class="chart-box tall"><canvas id="exChart" role="img" aria-label="Dot plot of cross-validated RMSE for each experiment and model"></canvas></div>
+        <p class="chart-note">All experiments are scored against the same reference, remaining life capped at 125, so the cap values are comparable. A cap below 125 cannot reach that reference at the top end, which slightly penalises cap 110.</p>
+        <details><summary>View as a table</summary><div class="tbl-wrap tbl-text" id="exTbl" style="margin-top:10px"></div></details></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tn">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:36px"><div class="a"><h2 class="h2" id="tn">Tuning</h2></div>
+      <div class="b"><p class="lede">With the features fixed, Random Forest and XGBoost each tried several settings. Linear Regression has none to tune. The best row for each is highlighted and is the one used in the final models.</p></div></div>
+      <div class="two"><div><h3 class="h3" style="margin-bottom:14px">Random Forest</h3><div class="tbl-wrap tbl-text" id="tuneRF"></div></div><div><h3 class="h3" style="margin-bottom:14px">XGBoost</h3><div class="tbl-wrap tbl-text" id="tuneXG"></div></div></div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="fi">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:36px"><div class="a"><h2 class="h2" id="fi">What the models rely on</h2></div>
+      <div class="b"><p class="lede" id="fiText">Loading.</p></div></div>
+      <div class="panel panel-pad"><div class="panel-h"><h3>Share of decisions by input</h3><span class="muted small">Random Forest and XGBoost, rolling averages folded into their sensor</span></div><div id="fiKey"></div><div class="chart-box" style="height:560px"><canvas id="fiChart" role="img" aria-label="Bar chart of feature importance by input for Random Forest and XGBoost"></canvas></div>
+        <p class="chart-note">Importance shows what a model uses, not what physically causes failure. Sensors that move together share credit, so a low bar does not always mean a sensor is useless.</p></div>
+    </div>
+  </section>
+</main>
+<script src="/static/vendor/chart.umd.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/models.js"></script>
+</body>
+</html>

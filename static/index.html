@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AEROLYTICS - Know the engine before it fails</title>
+<meta name="description" content="Estimate the remaining useful life of a turbofan engine from its sensor data, using three machine-learning models trained on NASA C-MAPSS FD001.">
+<meta name="theme-color" content="#090d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23090d16'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c5f03a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/site.css">
+<link rel="preload" href="/static/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+<main>
+  <section class="hero grid-bg" aria-labelledby="h1">
+    <div class="hero-main wrap">
+      <div class="hero-copy">
+        <h1 class="display" id="h1">Know the engine before it fails.</h1>
+        <p class="lede">Every engine wears down a little on every flight. AEROLYTICS reads a turbofan's sensor data and estimates how many flight cycles it has left, so maintenance can be planned before a fault becomes a failure.</p>
+        <div class="hero-actions">
+          <a class="btn btn-ghost" href="/dataset">Explore the data</a>
+          <a class="btn btn-lime" href="/predict">Run a prediction</a>
+        </div>
+        <p class="figcap">The ring around the fan has 125 ticks, one for each cycle of the life horizon the models learn from.</p>
+      </div>
+      <div class="hero-engine" id="heroEngine"></div>
+    </div>
+    <div class="hero-bar"><div class="wrap"><div class="hero-stats">
+      <div><span class="stat-n" data-k="train_engines">100</span><span class="stat-l">training engines, each run to failure</span></div>
+      <div><span class="stat-n" data-k="test_engines">100</span><span class="stat-l">test engines, stopped before failure</span></div>
+      <div><span class="stat-n" data-k="train_rows">20,631</span><span class="stat-l">training rows of sensor readings</span></div>
+      <div><span class="stat-n" data-k="test_rows">13,096</span><span class="stat-l">test rows of sensor readings</span></div>
+    </div></div></div>
+  </section>
+
+  <section class="section" aria-label="What the project covers">
+    <div class="wrap">
+      <article class="chapter" style="border-top:0;padding-top:0">
+        <div><div class="chapter-n" aria-hidden="true">1</div></div>
+        <div>
+          <h2 class="h2">Understand the engine data</h2>
+          <p class="lede" style="margin-top:18px" id="c1text">Each training engine is simulated from healthy to failure. Fourteen of its 21 sensors change as it wears, and they sit at specific points along the gas path.</p>
+          <a class="link" href="/dataset" style="display:inline-block;margin-top:24px">Open the dataset explorer</a>
+        </div>
+        <div style="grid-column:1/-1">
+          <div class="panel panel-pad" style="margin:8px 0 14px;overflow-x:auto"><div id="section-svg" style="min-width:980px"></div></div>
+          <p class="chart-note" style="margin:0 0 22px">Each label is a sensor from the dataset. Lime marks the three inputs the models rely on most. Select a label to open that sensor in the explorer.</p>
+        </div>
+      </article>
+
+      <article class="chapter">
+        <div><div class="chapter-n" aria-hidden="true">2</div></div>
+        <div>
+          <h2 class="h2">Explore the machine-learning models</h2>
+          <p class="lede" style="margin-top:18px" id="c2text">Linear Regression, Random Forest and XGBoost were each trained on the same prepared data and scored on 100 engines they had never seen.</p>
+          <div class="panel panel-pad" style="margin:32px 0 20px">
+            <div class="panel-h"><h3>Test error on 100 unseen engines</h3><span class="muted small">RMSE in cycles, lower is better</span></div>
+            <div class="chart-box short" id="c2box"><canvas id="c2chart" role="img" aria-label="Bar chart of test RMSE for the three models"></canvas></div>
+          </div>
+          <p style="display:flex;gap:28px;flex-wrap:wrap;margin:0"><a class="link" href="/models">See how the models were built</a><a class="link" href="/results">See the full results</a></p>
+        </div>
+      </article>
+
+      <article class="chapter">
+        <div><div class="chapter-n" aria-hidden="true">3</div></div>
+        <div>
+          <h2 class="h2">Predict remaining useful life</h2>
+          <p class="lede" style="margin-top:18px">Give the models a set of sensor readings and they return an estimate for each, with a health status. This one is a real test engine, run through the live prediction service.</p>
+          <div class="panel panel-pad" style="margin:32px 0 20px" id="demo" aria-live="polite"><div class="skeleton" style="height:150px"></div></div>
+          <a class="link" href="/predict">Open the prediction lab</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="mh">
+    <div class="wrap">
+      <h2 class="h2" id="mh" style="max-width:20ch">How the estimate is made honest</h2>
+      <ol class="steps cols" style="margin-top:48px">
+        <li><div><h3>Prepare the data</h3><p>Eight columns that never change are dropped. The rest are scaled, and each sensor gets a three-cycle rolling average.</p></div></li>
+        <li><div><h3>Cap the target at 125</h3><p>While an engine is healthy its sensors barely move, so training only asks the models to tell apart the last 125 cycles of life.</p></div></li>
+        <li><div><h3>Validate by engine</h3><p>Cross-validation holds out whole engines, so the models never see part of an engine they are scored on.</p></div></li>
+        <li><div><h3>Test once</h3><p>The final score uses 100 unseen engines and their actual remaining life, with the cap applied only to training.</p></div></li>
+      </ol>
+      <p style="margin-top:40px"><a class="link" href="/about">Read the full method and its limits</a></p>
+    </div>
+  </section>
+
+  <section class="cta-band" aria-label="Run a prediction">
+    <div class="wrap" style="display:grid;gap:32px;align-items:end;grid-template-columns:1fr">
+      <h2 class="display" style="font-size:clamp(2.2rem,5vw,4.6rem);max-width:14ch">See how much life an engine has left.</h2>
+      <div><a class="btn btn-lime" href="/predict">Open the prediction lab</a></div>
+    </div>
+  </section>
+</main>
+<script src="/static/vendor/chart.umd.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/home.js"></script>
+</body>
+</html>

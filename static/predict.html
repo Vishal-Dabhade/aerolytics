@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prediction lab - AEROLYTICS</title>
+<meta name="description" content="Enter sensor readings or upload an engine's history and get remaining useful life estimates from three trained models.">
+<meta name="theme-color" content="#090d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23090d16'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c5f03a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/site.css">
+</head>
+<body>
+<main>
+  <header class="page-head grid-bg">
+    <div class="wrap">
+      <h1 class="display">Prediction lab</h1>
+      <p class="lede" style="margin-top:18px">Set the sensor readings, or upload an engine's recorded cycles. Three trained models estimate how many cycles are left.</p>
+    </div>
+  </header>
+
+  <section class="section tight">
+    <div class="wrap lab">
+      <div class="lab-controls">
+        <div class="seg" role="group" aria-label="Input method">
+          <button type="button" id="tab-manual" aria-pressed="true">Enter readings</button>
+          <button type="button" id="tab-csv" aria-pressed="false">Upload CSV</button>
+        </div>
+
+        <div id="pane-manual">
+          <div class="toolbar">
+            <div class="row">
+              <div class="field"><label for="exSel">Start from a real engine</label><select id="exSel"></select></div>
+              <button class="btn btn-ghost btn-sm" type="button" id="exLoad">Load example</button>
+            </div>
+            <button class="btn btn-ghost btn-sm" type="button" id="reset">Reset to typical values</button>
+          </div>
+          <div class="ctl-group" id="ctl-main" aria-label="Main inputs"></div>
+          <details id="adv" style="margin-top:18px">
+            <summary>Advanced inputs</summary>
+            <p class="muted small" style="margin:4px 0 8px">These move the estimate less. They keep typical values unless you change them.</p>
+            <div class="ctl-group" id="ctl-adv"></div>
+          </details>
+          <p class="chart-note" style="margin-top:22px">Sliders can combine values that no real engine would produce. Treat results from heavily edited readings as the models' response to the numbers, not a forecast.</p>
+        </div>
+
+        <div id="pane-csv" hidden style="padding-top:22px">
+          <label class="drop" id="drop" for="file">
+            <input type="file" id="file" accept=".csv,text/csv">
+            <strong>Drop a CSV here or choose a file</strong>
+            <span class="muted small">One engine's recorded cycles, up to 5 MB. Three or more rows give the exact rolling average.</span>
+          </label>
+          <p style="margin:14px 0 0;display:flex;gap:24px;flex-wrap:wrap"><a class="link" href="/api/sample-csv" download>Download a sample CSV</a></p>
+          <details style="margin-top:8px"><summary>Required columns</summary><ul class="req" id="reqCols"></ul><p class="muted small" style="margin:10px 0 0">An optional <span class="num">unit</span> column lets one file hold several engines. Extra columns are ignored.</p></details>
+          <div id="csvStatus" style="margin-top:18px" aria-live="polite"></div>
+          <div id="csvOut" hidden>
+            <div class="row" style="margin:24px 0 14px;justify-content:space-between;align-items:center">
+              <div class="field" id="unitWrap" hidden><label for="unitSel">Engine</label><select id="unitSel"></select></div>
+              <button class="btn btn-ghost btn-sm" type="button" id="dl">Download predictions</button>
+            </div>
+            <div class="panel panel-pad">
+              <div class="panel-h"><h3>Predicted remaining life by cycle</h3></div>
+              <div id="csvKey"></div>
+              <div class="chart-box tall"><canvas id="csvChart" role="img" aria-label="Line chart of predicted remaining useful life by cycle for the three models"></canvas></div>
+              <p class="chart-note">Dashed lines mark the critical (30) and warning (60) thresholds. The first two cycles use a shorter rolling average, so early predictions are less reliable.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="lab-result panel res" id="result" aria-label="Prediction result" aria-live="polite"></aside>
+    </div>
+  </section>
+</main>
+<button class="float" id="float" type="button">Jump to estimate</button>
+<script src="/static/vendor/chart.umd.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/predict.js"></script>
+</body>
+</html>

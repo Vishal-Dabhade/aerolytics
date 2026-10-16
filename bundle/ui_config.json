@@ -1,0 +1,200 @@
+{
+ "inputs": [
+  {
+   "name": "cycle",
+   "min": 1.0,
+   "max": 362.0,
+   "default": 104.0,
+   "step": 1,
+   "importance_pct": 7.73,
+   "group": "main"
+  },
+  {
+   "name": "sensor_4",
+   "min": 1382.25,
+   "max": 1441.49,
+   "default": 1408.04,
+   "step": 0.01,
+   "importance_pct": 27.93,
+   "group": "main"
+  },
+  {
+   "name": "sensor_11",
+   "min": 46.85,
+   "max": 48.53,
+   "default": 47.51,
+   "step": 0.01,
+   "importance_pct": 27.08,
+   "group": "main"
+  },
+  {
+   "name": "sensor_15",
+   "min": 8.3249,
+   "max": 8.5848,
+   "default": 8.4389,
+   "step": 0.01,
+   "importance_pct": 11.4,
+   "group": "main"
+  },
+  {
+   "name": "sensor_9",
+   "min": 9021.73,
+   "max": 9244.59,
+   "default": 9060.66,
+   "step": 0.01,
+   "importance_pct": 5.75,
+   "group": "main"
+  },
+  {
+   "name": "sensor_2",
+   "min": 641.21,
+   "max": 644.53,
+   "default": 642.64,
+   "step": 0.01,
+   "importance_pct": 3.79,
+   "group": "main"
+  },
+  {
+   "name": "sensor_12",
+   "min": 518.69,
+   "max": 523.38,
+   "default": 521.48,
+   "step": 0.01,
+   "importance_pct": 3.2,
+   "group": "main"
+  },
+  {
+   "name": "sensor_7",
+   "min": 549.85,
+   "max": 556.06,
+   "default": 553.44,
+   "step": 0.01,
+   "importance_pct": 3.13,
+   "group": "main"
+  },
+  {
+   "name": "sensor_20",
+   "min": 38.14,
+   "max": 39.43,
+   "default": 38.83,
+   "step": 0.01,
+   "importance_pct": 2.7,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_3",
+   "min": 1571.04,
+   "max": 1616.91,
+   "default": 1590.1,
+   "step": 0.01,
+   "importance_pct": 1.75,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_17",
+   "min": 388.0,
+   "max": 400.0,
+   "default": 393.0,
+   "step": 0.01,
+   "importance_pct": 1.7,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_21",
+   "min": 22.8942,
+   "max": 23.6184,
+   "default": 23.2979,
+   "step": 0.01,
+   "importance_pct": 1.5,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_14",
+   "min": 8099.94,
+   "max": 8293.72,
+   "default": 8140.54,
+   "step": 0.01,
+   "importance_pct": 1.47,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_13",
+   "min": 2387.88,
+   "max": 2388.56,
+   "default": 2388.09,
+   "step": 0.01,
+   "importance_pct": 0.49,
+   "group": "advanced"
+  },
+  {
+   "name": "sensor_8",
+   "min": 2387.9,
+   "max": 2388.56,
+   "default": 2388.09,
+   "step": 0.01,
+   "importance_pct": 0.29,
+   "group": "advanced"
+  },
+  {
+   "name": "setting_1",
+   "min": -0.0087,
+   "max": 0.0087,
+   "default": 0.0,
+   "step": 0.0001,
+   "importance_pct": 0.05,
+   "group": "advanced"
+  },
+  {
+   "name": "setting_2",
+   "min": -0.0006,
+   "max": 0.0006,
+   "default": 0.0,
+   "step": 0.0001,
+   "importance_pct": 0.04,
+   "group": "advanced"
+  }
+ ],
+ "status_thresholds": {
+  "critical_below": 30,
+  "warning_below": 60
+ },
+ "cap": 125,
+ "rolling_window": 3,
+ "test_metrics": {
+  "Linear Regression": {
+   "test_RMSE": 22.23,
+   "test_MAE": 17.4,
+   "test_R2": 0.71
+  },
+  "Random Forest": {
+   "test_RMSE": 18.58,
+   "test_MAE": 13.62,
+   "test_R2": 0.8
+  },
+  "XGBoost": {
+   "test_RMSE": 18.7,
+   "test_MAE": 13.74,
+   "test_R2": 0.8
+  }
+ },
+ "csv_required_columns": [
+  "cycle",
+  "setting_1",
+  "setting_2",
+  "sensor_2",
+  "sensor_3",
+  "sensor_4",
+  "sensor_7",
+  "sensor_8",
+  "sensor_9",
+  "sensor_11",
+  "sensor_12",
+  "sensor_13",
+  "sensor_14",
+  "sensor_15",
+  "sensor_17",
+  "sensor_20",
+  "sensor_21"
+ ],
+ "note": "Single-reading mode uses the entered values as their own rolling mean (approximation). CSV with >=3 cycles gives the exact result."
+}

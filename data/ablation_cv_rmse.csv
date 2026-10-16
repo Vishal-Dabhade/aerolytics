@@ -1,0 +1,5 @@
+,Linear Regression,Random Forest,XGBoost
+"Final setup (cap 125, window 3, + cycle)",19.3,16.66,17.49
+No cap (raw RUL target),22.56,17.84,18.79
+No rolling mean (raw sensors only),19.48,16.8,17.65
+No cycle feature,20.62,18.52,19.61

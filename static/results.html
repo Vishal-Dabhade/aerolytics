@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23090d16'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c5f03a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/site.css">
+<title>Results - AEROLYTICS</title>
+<meta name="description" content="Official test results for Linear Regression, Random Forest and XGBoost on 100 unseen engines, with error analysis and ablation.">
+</head>
+<body>
+<main>
+  <header class="page-head grid-bg"><div class="wrap">
+    <h1 class="display">Results</h1>
+    <p class="lede" style="margin-top:18px">How the models did on 100 engines they had never seen, scored against each engine's actual remaining life.</p>
+  </div></header>
+
+  <section class="section tight" aria-labelledby="hm">
+    <div class="wrap">
+      <h2 class="h2" id="hm">Official test scores</h2>
+      <div class="three" style="margin-top:36px" id="scores"><div class="skeleton" style="height:220px"></div><div class="skeleton" style="height:220px"></div><div class="skeleton" style="height:220px"></div></div>
+      <div class="prose" style="margin-top:32px"><p><strong>RMSE</strong> is the typical size of an error in cycles, with large misses counting extra. <strong>MAE</strong> is the plain average miss. <strong>R&sup2;</strong> is the share of the variation in remaining life that the model explains. Lower is better for the first two, higher for R&sup2;.</p></div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="pv">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:32px"><div class="a"><h2 class="h2" id="pv">Predicted against actual</h2></div>
+      <div class="b"><p class="lede">One dot per test engine, at its last recorded cycle. A perfect model puts every dot on the dashed line. Predictions stop at 125, so dots for engines with more life left sit below the line.</p></div></div>
+      <div class="split">
+        <div class="b"><div class="panel panel-pad"><div class="row" style="justify-content:space-between;margin-bottom:12px"><div class="seg" role="group" aria-label="Model shown" id="pvSeg"></div><span class="muted small" id="pvInfo"></span></div><div class="chart-box" style="height:520px"><canvas id="pvChart" role="img" aria-label="Scatter of predicted against actual remaining life for the selected model"></canvas></div></div></div>
+        <div class="a"><dl class="sensor-card" style="grid-template-columns:1fr auto;margin-top:0;border-top:0;padding-top:0" id="pvStats"></dl><p class="chart-note" style="margin-top:20px">Dots above the line are too optimistic: the model thinks the engine has more life than it does. Dots below are too cautious. In maintenance, optimistic misses are the costly ones.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="eb">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:32px"><div class="a"><h2 class="h2" id="eb">Where the errors are</h2></div>
+      <div class="b"><p class="lede" id="ebText">Loading.</p></div></div>
+      <div class="panel panel-pad"><div class="panel-h"><h3>Test RMSE by remaining life</h3><span class="muted small">cycles, lower is better</span></div><div id="ebKey"></div><div class="chart-box tall"><canvas id="ebChart" role="img" aria-label="Grouped bars of test RMSE by remaining-life range for each model"></canvas></div></div>
+      <h3 class="h3" style="margin:48px 0 14px">Ten hardest engines</h3>
+      <p class="muted small" style="margin:0 0 14px">Ranked by average error across the three models. Positive error means the model was too optimistic.</p>
+      <div class="tbl-wrap tbl-text" id="worst"></div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="ab">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:32px"><div class="a"><h2 class="h2" id="ab">What each choice contributed</h2></div>
+      <div class="b"><p class="lede" id="abText">Loading.</p></div></div>
+      <div class="panel panel-pad"><div class="panel-h"><h3>Cross-validated RMSE with one choice removed</h3><span class="muted small">default model settings</span></div><div id="abKey"></div><div class="chart-box tall"><canvas id="abChart" role="img" aria-label="Dot plot of cross-validated RMSE when each design choice is removed"></canvas></div>
+        <p class="chart-note">These runs use default model settings, so the final-setup numbers are slightly higher than the tuned figures. Compare rows with each other.</p>
+        <h4 style="margin:26px 0 10px;font:600 .95rem var(--body);color:var(--ink-2)">Change in RMSE when removed (higher means the choice mattered more)</h4><div class="tbl-wrap tbl-text" id="abTbl"></div></div>
+    </div>
+  </section>
+</main>
+<script src="/static/vendor/chart.umd.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/results.js"></script>
+</body>
+</html>

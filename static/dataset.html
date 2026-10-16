@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dataset explorer - AEROLYTICS</title>
+<meta name="description" content="Explore the real NASA C-MAPSS FD001 turbofan data: engine lifetimes, sensor trends, operating conditions, correlations and the raw table.">
+<meta name="theme-color" content="#090d16">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%23090d16'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23c5f03a' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/css/site.css">
+</head>
+<body>
+<main>
+  <header class="page-head grid-bg">
+    <div class="wrap">
+      <h1 class="display">Dataset explorer</h1>
+      <p class="lede" style="margin-top:18px">The real FD001 data behind every model: 200 simulated turbofan engines, each with 21 sensors recorded once per flight cycle.</p>
+    </div>
+  </header>
+
+  <section class="section tight">
+    <div class="wrap">
+      <div class="hero-stats" id="stats" style="border:1px solid var(--line);margin-bottom:56px;background:var(--graphite)">
+        <div style="padding-left:24px"><span class="stat-n skeleton" style="width:4ch">&nbsp;</span></div><div></div><div></div><div></div>
+      </div>
+      <div class="split">
+        <div class="a"><h2 class="h2">What the data shows</h2></div>
+        <div class="b"><ul class="finds" id="finds"><li><div class="skeleton" style="height:1.4em"></div></li></ul></div>
+      </div>
+      <div class="two" style="margin-top:56px">
+        <div class="panel panel-pad"><div class="panel-h"><h3>How long training engines last</h3><span class="muted small">cycles until failure</span></div><div class="chart-box short"><canvas id="lifeChart" role="img" aria-label="Histogram of training engine lifetimes"></canvas></div></div>
+        <div class="panel panel-pad"><div class="panel-h"><h3>Sensors and settings</h3><span class="muted small">which columns carry information</span></div><div id="colMap"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="explorer" aria-labelledby="eh">
+    <div class="wrap">
+      <h2 class="h2" id="eh">Follow one engine</h2>
+      <p class="lede" style="margin:14px 0 28px">Training engines run to failure, so their remaining life is known on every row. Test engines stop early, and their remaining life is implied by counting down from the true value at the last recorded cycle.</p>
+      <div class="row" style="margin-bottom:26px">
+        <div class="field"><span class="lab" id="splitLab">Set</span><div class="seg" role="group" aria-labelledby="splitLab"><button type="button" id="sTrain" aria-pressed="true">Training</button><button type="button" id="sTest" aria-pressed="false">Test</button></div></div>
+        <div class="field"><label for="engSel">Engine</label><select id="engSel" style="min-width:17rem"></select></div>
+        <div class="field"><label for="senSel">Sensor</label><select id="senSel" style="min-width:20rem"></select></div>
+        <div class="field"><span class="lab" id="avgLab">Smoothing</span><div class="seg" role="group" aria-labelledby="avgLab"><button type="button" id="avgOff" aria-pressed="true">Raw readings</button><button type="button" id="avgOn" aria-pressed="false">3-cycle average</button></div></div>
+      </div>
+      <div id="engErr"></div>
+      <div class="two" id="engCharts">
+        <div class="panel panel-pad"><div class="panel-h"><h3>Remaining useful life by cycle</h3></div><div id="rulKey"></div><div class="chart-box"><canvas id="rulChart" role="img" aria-label="Remaining useful life against cycle for the selected engine"></canvas></div><p class="chart-note" id="rulNote"></p></div>
+        <div class="panel panel-pad"><div class="panel-h"><h3 id="senTitle">Sensor</h3></div><div id="senKey"></div><div class="chart-box"><canvas id="senChart" role="img" aria-label="Selected sensor reading against cycle"></canvas></div><dl class="sensor-card" id="senCard"></dl></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="oh">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:40px">
+        <div class="a"><h2 class="h2" id="oh">Operating conditions</h2></div>
+        <div class="b"><p class="lede" id="opText">Loading.</p></div>
+      </div>
+      <div class="three" id="opCharts">
+        <div class="panel panel-pad"><div class="panel-h"><h3>setting_1</h3><span class="muted small" id="s1stat"></span></div><div class="chart-box short"><canvas id="s1" role="img" aria-label="Histogram of setting 1"></canvas></div></div>
+        <div class="panel panel-pad"><div class="panel-h"><h3>setting_2</h3><span class="muted small" id="s2stat"></span></div><div class="chart-box short"><canvas id="s2" role="img" aria-label="Histogram of setting 2"></canvas></div></div>
+        <div class="panel panel-pad"><div class="panel-h"><h3>Both settings together</h3><span class="muted small">1,500 random rows</span></div><div class="chart-box short"><canvas id="s12" role="img" aria-label="Scatter of setting 1 against setting 2"></canvas></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" aria-labelledby="ch">
+    <div class="wrap">
+      <div class="split" style="margin-bottom:40px">
+        <div class="a"><h2 class="h2" id="ch">Sensors move together</h2></div>
+        <div class="b"><p class="lede">Correlation between the 14 informative sensors and remaining life, across all training rows. Sensors are ordered from most positive to most negative against RUL.</p></div>
+      </div>
+      <div class="panel panel-pad">
+        <div class="heat" id="heat"></div>
+        <div class="row" style="margin-top:18px;gap:14px 24px;align-items:center"><span class="muted small">-1</span><span class="legend-grad" aria-hidden="true"></span><span class="muted small">+1</span><span class="chart-note" style="margin:0">Blue: move in opposite directions. Red: move together. Hover a cell for the exact value, or open the table view below.</span></div>
+        <details style="margin-top:14px"><summary>View as a table</summary><div class="tbl-wrap" id="heatTbl" style="margin-top:10px"></div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="th">
+    <div class="wrap">
+      <h2 class="h2" id="th">Raw data</h2>
+      <p class="lede" style="margin:14px 0 26px">Every row of the original files, including the columns the models drop.</p>
+      <div class="row" style="margin-bottom:18px">
+        <div class="field"><span class="lab" id="tSplitLab">Set</span><div class="seg" role="group" aria-labelledby="tSplitLab"><button type="button" id="tTrain" aria-pressed="true">Training</button><button type="button" id="tTest" aria-pressed="false">Test</button></div></div>
+        <div class="field"><label for="q">Search by engine number</label><input type="search" id="q" placeholder="For example 17" inputmode="numeric" style="width:14rem"></div>
+        <div class="field"><label for="ps">Rows per page</label><select id="ps"><option>10</option><option selected>25</option><option>50</option><option>100</option></select></div>
+      </div>
+      <div id="tbl"></div>
+      <div class="pager" id="pager"></div>
+    </div>
+  </section>
+</main>
+<div class="tip" id="tip" role="presentation"></div>
+<script src="/static/vendor/chart.umd.js"></script>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/dataset.js"></script>
+</body>
+</html>
